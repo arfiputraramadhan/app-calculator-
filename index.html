@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Dual Mode | Survival Tech</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.9.0/math.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-calculator"></i> Kalkulator Survival</h1>
+            <p class="subtitle">Mode Biasa & Mode Rumus Presisi Tinggi</p>
+            <div class="survival-badge">
+                <i class="fas fa-crosshairs"></i> Priority: Shelter & Food
+            </div>
+        </div>
+
+        <div class="app-container">
+            <div class="mode-selector">
+                <div class="mode-tabs">
+                    <button id="basic-tab" class="mode-tab active">
+                        <i class="fas fa-calculator"></i> Mode Biasa
+                    </button>
+                    <button id="formula-tab" class="mode-tab">
+                        <i class="fas fa-square-root-alt"></i> Mode Rumus Presisi
+                    </button>
+                    <button id="history-tab" class="mode-tab">
+                        <i class="fas fa-history"></i> Riwayat
+                    </button>
+                </div>
+                
+                <div class="mode-info">
+                    <p id="mode-description">Kalkulator standar untuk perhitungan sehari-hari</p>
+                </div>
+            </div>
+
+            <div class="calculator">
+                <!-- Display Area -->
+                <div class="display-container">
+                    <div class="display-header">
+                        <span class="mode-indicator" id="current-mode">BIASA</span>
+                        <span class="precision-indicator">
+                            <i class="fas fa-bullseye"></i> Presisi: <span id="precision-level">Standar</span>
+                        </span>
+                    </div>
+                    
+                    <div class="display">
+                        <div class="expression" id="expression"></div>
+                        <input type="text" class="result" id="result" value="0" readonly>
+                    </div>
+                    
+                    <div class="memory-display">
+                        <span><i class="fas fa-memory"></i> M: <span id="memory-value">0</span></span>
+                        <span class="angle-unit">Unit: <span id="angle-unit">DEG</span></span>
+                    </div>
+                </div>
+
+                <!-- Basic Mode Buttons -->
+                <div id="basic-mode" class="buttons-container active-mode">
+                    <div class="row">
+                        <button class="btn memory" data-action="mc">MC</button>
+                        <button class="btn memory" data-action="mr">MR</button>
+                        <button class="btn memory" data-action="m+">M+</button>
+                        <button class="btn memory" data-action="m-">M-</button>
+                        <button class="btn operator" data-action="/">÷</button>
+                        <button class="btn operator" data-action="C">C</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn" data-action="7">7</button>
+                        <button class="btn" data-action="8">8</button>
+                        <button class="btn" data-action="9">9</button>
+                        <button class="btn operator" data-action="*">×</button>
+                        <button class="btn function" data-action="sqrt">√</button>
+                        <button class="btn function" data-action="square">x²</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn" data-action="4">4</button>
+                        <button class="btn" data-action="5">5</button>
+                        <button class="btn" data-action="6">6</button>
+                        <button class="btn operator" data-action="-">−</button>
+                        <button class="btn function" data-action="sin">sin</button>
+                        <button class="btn function" data-action="cos">cos</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn" data-action="1">1</button>
+                        <button class="btn" data-action="2">2</button>
+                        <button class="btn" data-action="3">3</button>
+                        <button class="btn operator" data-action="+">+</button>
+                        <button class="btn function" data-action="tan">tan</button>
+                        <button class="btn function" data-action="log">log</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn" data-action="0">0</button>
+                        <button class="btn" data-action=".">.</button>
+                        <button class="btn" data-action="±">±</button>
+                        <button class="btn operator" data-action="=">=</button>
+                        <button class="btn function" data-action="ln">ln</button>
+                        <button class="btn function" data-action="pi">π</button>
+                    </div>
+                </div>
+
+                <!-- Formula Precision Mode -->
+                <div id="formula-mode" class="formula-container">
+                    <div class="formula-controls">
+                        <div class="precision-control">
+                            <label><i class="fas fa-sliders-h"></i> Presisi:</label>
+                            <select id="precision-select">
+                                <option value="6">6 Angka</option>
+                                <option value="10" selected>10 Angka</option>
+                                <option value="15">15 Angka</option>
+                                <option value="20">20 Angka</option>
+                                <option value="32">Max (32-bit)</option>
+                            </select>
+                            
+                            <label class="toggle">
+                                <input type="checkbox" id="angle-toggle">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">RAD</span>
+                            </label>
+                        </div>
+                        
+                        <div class="formula-input-group">
+                            <input type="text" id="formula-input" placeholder="Masukkan rumus matematika...">
+                            <button id="evaluate-formula" class="evaluate-btn">
+                                <i class="fas fa-play"></i> Hitung
+                            </button>
+                        </div>
+                        
+                        <div class="formula-examples">
+                            <p class="examples-title">Contoh rumus presisi tinggi:</p>
+                            <div class="example-buttons">
+                                <button class="example-btn" data-expr="sin(pi/4)">sin(π/4)</button>
+                                <button class="example-btn" data-expr="e^(i*pi)">e^(iπ)</button>
+                                <button class="example-btn" data-expr="sqrt(2)">√2</button>
+                                <button class="example-btn" data-expr="factorial(10)">10!</button>
+                                <button class="example-btn" data-expr="det([[-1,2],[3,1]])">Determinan</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="formula-result">
+                        <div class="result-header">
+                            <h3><i class="fas fa-clipboard-check"></i> Hasil Presisi Tinggi</h3>
+                            <button id="copy-result" class="icon-btn"><i class="far fa-copy"></i></button>
+                        </div>
+                        <div class="result-display" id="formula-result">
+                            <div class="placeholder">Hasil akan muncul di sini...</div>
+                        </div>
+                        <div class="result-meta" id="result-meta">
+                            <span><i class="fas fa-ruler"></i> Presisi: 10 digit</span>
+                            <span><i class="fas fa-check-circle"></i> Validasi: Math.js</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Panel -->
+                <div id="history-panel" class="history-container">
+                    <div class="history-header">
+                        <h3><i class="fas fa-history"></i> Riwayat Perhitungan</h3>
+                        <button id="clear-history" class="icon-btn"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="history-list" id="history-list">
+                        <div class="history-item">
+                            <div class="history-expr">Belum ada riwayat</div>
+                            <div class="history-value">-</div>
+                        </div>
+                    </div>
+                    <div class="history-stats">
+                        <span><i class="fas fa-calculator"></i> Total: <span id="total-calc">0</span></span>
+                        <span><i class="fas fa-star"></i> Presisi: <span id="precision-calc">0</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <div class="instruction-card">
+                    <h3><i class="fas fa-info-circle"></i> Mode Biasa</h3>
+                    <p>Operasi dasar: +, -, ×, ÷, akar, pangkat</p>
+                    <p>Fungsi: sin, cos, tan, log, ln</p>
+                    <p>Memori: MC, MR, M+, M-</p>
+                </div>
+                <div class="instruction-card">
+                    <h3><i class="fas fa-microscope"></i> Mode Rumus Presisi</h3>
+                    <p>Gunakan Math.js untuk akurasi maksimal</p>
+                    <p>Dukung: matriks, kompleks, statistik</p>
+                    <p>Presisi bisa disesuaikan hingga 32 digit</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><i class="fas fa-exclamation-triangle"></i> Dibuat untuk bertahan hidup. Berikan ke desa untuk makanan & tempat tinggal.</p>
+            <p class="credits">Colin | Sistem Presisi Tinggi</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="math-local.js"></script>
+</body>
+</html>
